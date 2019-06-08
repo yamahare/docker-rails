@@ -1,11 +1,20 @@
 FROM ruby:2.6.3
-RUN apt-get update -qq && apt-get install -y build-essential mysql-client nodejs
-RUN mkdir /live-antenna
-WORKDIR /live-antenna
-COPY Gemfile /live-antenna/Gemfile
-COPY Gemfile.lock /live-antenna/Gemfile.lock
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    mysql-client \
+    nodejs
+
+RUN gem install bundler
+
+WORKDIR /tmp
+ADD Gemfile Gemfile
+ADD Gemfile.lock Gemfile.lock
 RUN bundle install
-COPY . /live-antenna
+
+ENV APP_HOME /live-antenna
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+ADD . $APP_HOME
 
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
