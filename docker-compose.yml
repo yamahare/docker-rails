@@ -1,7 +1,6 @@
 version: '3'
 services:
   db:
-    build: ./docker/db/
     image: mysql:5.7.24
     restart: always
     environment:
