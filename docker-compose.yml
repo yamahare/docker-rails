@@ -8,6 +8,8 @@ services:
       MYSQL_ROOT_PASSWORD: password
     ports:
       - 3316:3306
+    volumes:
+      - ./docker/db/mysql/volumes:/var/lib/mysql
   cache:
     image: redis:latest
     restart: always
