@@ -7,6 +7,8 @@ rails run at docker
 2. docker-compose build
 ## コンテナの作成＆起動（バックグラウンド）
 3. docker-compose up -d
+## データベースの作成
+4. docker-compose run web bundle exec rails db:create 
 
 ```database.yml
 default: &default
