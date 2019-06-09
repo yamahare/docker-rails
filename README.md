@@ -11,12 +11,14 @@ rails run at docker
 ```database.yml
 default: &default
   adapter: mysql2
-  encoding: utf8
+  charset: utf8mb4
+  encoding: utf8mb4
+  collation: utf8mb4_general_ci
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password: password
   host: db
-  port: 3306
+  timeout: 5000
 
 development:
   <<: *default
