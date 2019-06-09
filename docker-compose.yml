@@ -6,11 +6,11 @@ services:
     environment:
       MYSQL_USER: root
       MYSQL_ROOT_PASSWORD: password
-      TZ: "Asia/Tokyo"
     ports:
       - 3316:3306
     volumes:
       - ./docker/db/mysql.conf.d:/etc/mysql/mysql.conf.d
+      - datavol:/var/lib/mysql
   cache:
     image: redis:latest
     restart: always
@@ -32,3 +32,5 @@ services:
     depends_on:
       - db
       - cache
+volumes:
+  datavol:
