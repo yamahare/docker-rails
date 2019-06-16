@@ -9,25 +9,43 @@ services:
     ports:
       - 3316:3306
     volumes:
-      - ./docker/db/mysql/volumes:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+
   cache:
     image: redis:latest
     restart: always
     ports:
       - "6381:6379"
     command: redis-server --appendonly yes
-  web:
-    build:
-      context: .
-      dockerfile: ./docker/rails/Dockerfile
+
+  app: &app_base
+    build: .
     ports:
       - 3000:3000
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+      - 3035:3035
+    command: >
+      bash -c "bundle install &&
+      bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
-      - .:/live-antenna
+      - .:/live-antenna:cached
+      - bundle_install:/usr/local/bundle
+      # exclude volumes(Anonymous VolumeでVolumeを上書き)
+      - /live-antenna/tmp
+      - /live-antenna/log
+      - /live-antenna/.git
+      - /live-antenna/node_modules
     environment:
       RAILS_ENV: development
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+      WEBPACKER_DEV_SERVER_INLINE: "true"
+      WEBPACKER_DEV_SERVER_HMR: "false"
     restart: always
     depends_on:
       - db
       - cache
+
+volumes:
+  mysql_data:
+    driver: local
+  bundle_install:
+    driver: local
